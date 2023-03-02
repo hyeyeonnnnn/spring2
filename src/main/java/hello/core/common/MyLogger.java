@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.UUID;
-
 @Component
 @Scope(value = "request")
 public class MyLogger {
