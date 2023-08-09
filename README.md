@@ -17,6 +17,11 @@
 + 논리명 생성: 명시적으로 컬럼, 테이블명을 직접 적지 않으면 ImplicitNamingStrategy 사용
   spring.jpa.hibernate.naming.implicit-strategy:테이블이나 컬럼명을 명시하지 않으면 논리명 적용
 + 물리명 적용: spring.jpa.hibernate.naming.physical-strategy:모든 논리명에 적용
-  
+#### 계층적 구조 사용  
+- controller, web: 웹 계층
+- service: 비즈니스 로직, 트랜잭션 처리
+- repository: JPA를 직접 사용하는 계층, 엔티티 매니저 사용
+- domain: 엔티티가 모여 있는 계층. 모든 계층에서 사용
+- 
   
 
