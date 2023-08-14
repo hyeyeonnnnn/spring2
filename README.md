@@ -14,6 +14,7 @@
 3. 컬렉션은 필드에서 초기화
    null 문제에서 안전. 하이버네이트는 엔티티를 영속화 할 때 컬렉션을 감싸서 하이버네잍가 제공하는 내장 컬렉션으로 변경한다.
    만약 getOrders()처럼 임의의 메서드에서 컬렉션을 잘못 생성하면 하이버네이트 내부 메커니즘에서 문제가 발생할 수 있다.
+   
 + 논리명 생성: 명시적으로 컬럼, 테이블명을 직접 적지 않으면 ImplicitNamingStrategy 사용
   spring.jpa.hibernate.naming.implicit-strategy:테이블이나 컬럼명을 명시하지 않으면 논리명 적용
 + 물리명 적용: spring.jpa.hibernate.naming.physical-strategy:모든 논리명에 적용
