@@ -30,3 +30,94 @@
  엔티티에는 비즈니스 로직이 거의 없고 서비스 계층에서 대부분의 비즈니스 로직을 처리하는 것  
 #### 동적 쿼리 -> Querydsl로 처리
 
+
+#### Spring
+⭐**Spring FrameWork**
+자바의 오픈소스 애플리케이션 프레임워크 중 하나입니다.
+특정 기술에 종속되지 않고 객체를 관리할 수 있는 프레임워크를 제공하는 것 입니다.
+스프링 컨테이너로 자바 객체를 관리하면서 DI와 IoC를 통해 결합도를 낮추게 됩니다.
+
+⭐**DI (Depedency Injection)**
+DI는 의존성 주입을 의미합니다.
+생성자 주입, Field 주입, Setter 주입을 통해 객체간의 의존관계를 미리 설정해두면 스프링 컨테이너가 의존관계를 자동으로 연결해줍니다.
+이렇게 되면 직접 의존하는 객체를 생성하는 일이 없기 때문에 결합도가 낮아지는 장점이 있습니다.
+Spring에서 가장 권장하는 의존성 주입 방법은 생성자를 통한 주입 방법 인데 그 이유는 순환 참조를 방지하고, 불변성을 가지며 테스트에 용이하기 때문입니다.
+**생성자 주입을 권장하는 이유**
+1. 순환 참조를 방지할 수 있다.
+개발을 하다 보면 여러 컴포넌트 간에 의존성이 생깁니다.
+예를 들어, A가 B를 참조하고, B가 다시 A를 참조하는 순환 참조되는 코드가 있다고 가정해 봅니다.
+@Service
+public class AService {
+ 
+    // 순환 참조
+    @Autowired
+    private BService bService;
+ 
+    public void HelloA() {
+        bService.HelloB();
+    }
+}
+@Service
+public class BService {
+    
+    // 순환 참조
+    @Autowired
+    private AService aService;
+ 
+    public void HelloB() {
+        aService.HelloA();
+    }
+}
+필드 주입과 수정자 주입은 빈이 생성된 후에 참조를 하기 때문에 어플리케이션이 아무런 오류 그리고 경고 없이 구동됩니다.
+그리고 그것은 실제 코드가 호출될 때까지 문제를 알 수 없다는 것입니다.
+반면, 생성자를 통해 주입하고 실행하면 BeanCurrentlyInCreationException이 발생하게 됩니다.
+순환 참조 뿐만아니라 더 나아가서 의존 관계에 내용을 외부로 노출 시킴으로써 어플리케이션을 실행하는 시점에서 오류를 체크할 수 있습니다.
+2. 불변성(Immutability)
+생성자로 의존성을 주입할 때 final로 선언할 수 있고, 이로인해 런타임에서 의존성을 주입받는 객체가 변할 일이 없어지게 됩니다.
+하지만 수정자 주입이나 일반 메소드 주입을 이용하게되면 불필요하게 수정의 가능성을 열어두게 되고,
+이는 OOP의 5가지 원칙 중 OCP(Open-Closed Principal, 개방-폐쇄의 원칙)를 위반하게 됩니다.
+그러므로 생성자 주입을 통해 변경의 가능성을 배제하고 불변성을 보장하는 것이 좋습니다.
+또한, 필드 주입 방식은 null이 만들어질 가능성이 있는데, final로 선언한 생성자 주입 방식은 null이 불가능합니다.
+
+@Controller
+public class CocoController {
+ 
+    private final CocoService cocoService;
+ 
+    public CocoController(CocoService cocoService) {
+        this.cocoService = cocoService;
+    }
+}
+ 
+3. 테스트에 용이하다.
+생성자 주입을 사용하게 되면 테스트 코드를 좀 더 편리하게 작성할 수 있습니다.
+
+public class CocoService {
+    private final CocoRepository cocoRepository;
+    
+    public CocoService(CocoRepository cocoRepository) {
+    	this.cocoRepository = cocoRepository;
+    }
+    
+    public void doSomething() {
+        // do Something with cocoRepository
+    }
+}
+ 
+public class CocoServiceTest {
+    CocoRepository cocoRepository = new CocoRepository();
+    CocoService cocoService = new CocoService(cocoRepository);
+    
+    @Test
+    public void testDoSomething() {
+        cocoService.doSomething();
+    }
+}
+독립적으로 인스턴스화가 가능한 POJO(Plain Old Java Object)를 사용하면, DI 컨테이너 없이도 의존성을 주입하여 사용할 수 있습니다.
+이를 통해 코드 가독성이 높아지며, 유지보수가 용이하고 테스트의 격리성과 예측 가능성을 높일 수 있다는 장점이 생기게 됩니다.
+위와 같은 이유로 필드 주입이나 수정자 주입 보다는 생성자 주입의 사용을 권장합니다.
+
+⭐**IoC (Inversion of Control)**
+IoC는 제어의 역전을 의미합니다.
+제어권이 개발자에게 있지 않고, 프레임워크에 있어서 필요에 따라서 사용자의 코드를 호출하게 됩니다.
+스프링에서는 인스턴스의 생성부터 소멸까지 인스턴스 생명주기 관리를 개발자가 아닌 컨테이너에서 대신 관리하게 됩니다.
