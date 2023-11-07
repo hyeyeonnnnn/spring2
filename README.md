@@ -140,7 +140,6 @@ XML로 스프링 빈을 등록하는 방법도 있지만, 최근에는 거의 �
 MemberRepository는 인터페이스이고, MemoryMemberRepository가 구현체이기 때문에  MemoryMemberRepository를 new 해줍니다.
 ![image](https://github.com/hyeyeonnnnn/spring2/assets/115079024/c2b1a35e-c973-4247-aabb-b1d14444f000)
 
-
 @Bean 어노테이션의 주요 내용은 아래와 같습니다.  
 @Configuration 설정된 클래스의 메소드에서 사용가능
 메소드의 리턴 객체가 스프링 빈 객체임을 선언함
